@@ -291,6 +291,57 @@
             `;
         } else { statusDiv.innerHTML = "Корзина пуста"; }
     }
+        function toggleDeliveryFields(type) {
+        var calcField = document.getElementById('fields-calc');
+        if (calcField) {
+            calcField.style.display = (type === 'calc') ? 'block' : 'none';
+        }
+    }
+
+    function clearCart() {
+        cart = {};
+        document.querySelectorAll('.product').forEach(function(parent) {
+            parent.querySelector('.qty').innerText = 0;
+            parent.querySelector('.btn-add').style.display = 'block';
+            parent.querySelector('.counter').style.display = 'none';
+        });
+        updateCart();
+    }
+
+    function sendOrder() {
+        var phone = document.getElementById('input-phone').value.trim();
+        var deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
+        var address = document.getElementById('input-address') ? document.getElementById('input-address').value.trim() : '';
+
+        if (!phone) {
+            alert('Пожалуйста, введите номер телефона для формирования чека!');
+            return;
+        }
+        if (document.getElementById('del-calc').checked && !address) {
+            alert('Пожалуйста, укажите адрес/ПВЗ и желаемую компанию доставки!');
+            return;
+        }
+
+        var text = "📦 ЗДРАВСТВУЙТЕ! ХОЧУ СДЕЛАТЬ ЗАКАЗ:\n\n";
+        var total = 0;
+        for (var name in cart) {
+            text += "• " + name + " — " + cart[name].count + " шт. (" + (cart[name].count * cart[name].price) + " ₽)\n";
+            total += cart[name].count * cart[name].price;
+        }
+        text += "\n💰 Сумма заказа: " + total + " ₽\n";
+        text += "\n📍 СПОСОБ ПОЛУЧЕНИЯ:\n" + deliveryType;
+        
+        if (document.getElementById('del-calc').checked) {
+            text += "\n🏠 Данные доставки: " + address;
+        } else if (document.getElementById('del-pickup').checked) {
+            text += "\n🏬 Точка: м. Некрасовка, ул. Вертолетчиков 21к5";
+        }
+        text += "\n📱 Телефон для чека: " + phone;
+
+        var tMeUrl = "https://t.me/" + myTelegramUsername + "?text=" + encodeURIComponent(text);
+        if (tg) { tg.openTelegramLink(tMeUrl); } else { window.open(tMeUrl, '_blank'); }
+    }
+
 </script>
 </body>
 </html>
