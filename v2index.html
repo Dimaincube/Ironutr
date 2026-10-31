@@ -336,7 +336,7 @@
 
         text += "\n📱 Телефон для чека: " + phone;
 
-        var tMeUrl = "https://t.me" + myTelegramUsername + "?text=" + encodeURIComponent(text);
+        var tMeUrl = "https://t.me/" + myTelegramUsername + "?text=" + encodeURIComponent(text);
         if (tg) { tg.openTelegramLink(tMeUrl); } else { window.open(tMeUrl, '_blank'); }
     }
 </script>
