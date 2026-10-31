@@ -2,95 +2,306 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Магазин Спортивного Питания</title>
     <script src="https://telegram.org"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f9; color: #333; margin: 0; padding: 15px; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .product { background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; }
-        .product img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-right: 15px; }
-        .product-info { flex-grow: 1; }
-        .product-title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
-        .product-price { color: #007bff; font-weight: bold; }
-        .btn { background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
-        .btn-remove { background: #dc3545; margin-left: 5px; }
-        .cart-status { text-align: center; margin-top: 20px; font-weight: bold; font-size: 16px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f4f4f7; color: #000; margin: 0; padding: 12px; padding-bottom: 90px; user-select: none; }
+        .header { text-align: center; margin-bottom: 15px; }
+        .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; -webkit-overflow-scrolling: touch; }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn { background: #e4e4e7; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; white-space: nowrap; font-size: 14px; color: #3f3f46; transition: 0.2s; -webkit-tap-highlight-color: transparent; }
+        .cat-btn.active { background: #007aff; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .product { background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .product-img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-right: 12px; background: #e4e4e7; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #71717a; }
+        .product-info { flex-grow: 1; margin-right: 10px; }
+        .product-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+        .product-desc { font-size: 12px; color: #71717a; margin-bottom: 6px; line-height: 1.3; }
+        .product-price { color: #007aff; font-weight: bold; font-size: 15px; }
+        .controls { display: flex; align-items: center; justify-content: flex-end; min-width: 80px; }
+        .btn-add { background: #007aff; color: white; border: none; padding: 6px 14px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+        .counter { display: none; align-items: center; gap: 10px; font-weight: bold; }
+        .btn-count { background: #e4e4e7; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; -webkit-tap-highlight-color: transparent; }
+        .cart-status { text-align: center; margin-top: 25px; font-size: 14px; color: #71717a; font-weight: 500; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h2>Наш Магазин Спортпита</h2>
-    <p>Добавляйте товары и отправляйте заказ оператору</p>
+    <h2 style="margin: 5px 0; font-size: 20px;">Магазин Спортпита</h2>
 </div>
 
-<!-- Товар 1 -->
-<div class="product">
-    <img src="https://placehold.co" alt="Протеин">
-    <div class="product-info">
-        <div class="product-title">Сывороточный протеин (1 кг)</div>
-        <div class="product-price">2500 руб.</div>
+<!-- Вкладки категорий -->
+<div class="categories">
+    <button class="cat-btn active" onclick="switchTab(event, 'proteins')">Протеины</button>
+    <button class="cat-btn" onclick="switchTab(event, 'creatines')">Креатины</button>
+    <button class="cat-btn" onclick="switchTab(event, 'bundles')">Выгодные наборы</button>
+</div>
+
+<!-- Категория: Протеины -->
+<div id="proteins" class="tab-content active">
+    <div class="product" data-name="Протеин Шоколадный" data-price="2500">
+        <div class="product-img">PROTEIN</div>
+        <div class="product-info">
+            <div class="product-title">Шоколадный протеин</div>
+            <div class="product-desc">Насыщенный вкус бельгийского шоколада.</div>
+            <div class="product-price">2500 ₽</div>
+        </div>
+        <div class="controls">
+            <button class="btn-add" onclick="changeQty(this, 1)">+</button>
+            <div class="counter">
+                <button class="btn-count" onclick="changeQty(this, -1)">-</button>
+                <span class="qty">0</span>
+                <button class="btn-count" onclick="changeQty(this, 1)">+</button>
+            </div>
+        </div>
     </div>
-    <button class="btn" onclick="addToCart('Протеин 1кг', 2500)">+</button>
-</div>
-
-<!-- Товар 2 -->
-<div class="product">
-    <img src="https://placehold.co" alt="Креатин">
-    <div class="product-info">
-        <div class="product-title">Креатин моногидрат (300 г)</div>
-        <div class="product-price">1200 руб.</div>
+    <div class="product" data-name="Протеин Клубничный" data-price="2500">
+        <div class="product-img">PROTEIN</div>
+        <div class="product-info">
+            <div class="product-title">Клубничный протеин</div>
+            <div class="product-desc">Нежный вкус спелой клубники со сливками.</div>
+            <div class="product-price">2500 ₽</div>
+        </div>
+        <div class="controls">
+            <button class="btn-add" onclick="changeQty(this, 1)">+</button>
+            <div class="counter">
+                <button class="btn-count" onclick="changeQty(this, -1)">-</button>
+                <span class="qty">0</span>
+                <button class="btn-count" onclick="changeQty(this, 1)">+</button>
+            </div>
+        </div>
     </div>
-    <button class="btn" onclick="addToCart('Креатин 300г', 1200)">+</button>
+    <div class="product" data-name="Протеин Ваниль" data-price="2500">
+        <div class="product-img">PROTEIN</div>
+        <div class="product-info">
+            <div class="product-title">Ванильный протеин</div>
+            <div class="product-desc">Классический мягкий вкус бурбонской ванили.</div>
+            <div class="product-price">2500 ₽</div>
+        </div>
+        <div class="controls">
+            <button class="btn-add" onclick="changeQty(this, 1)">+</button>
+            <div class="counter">
+                <button class="btn-count" onclick="changeQty(this, -1)">-</button>
+                <span class="qty">0</span>
+                <button class="btn-count" onclick="changeQty(this, 1)">+</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="cart-status" id="cartStatus">Корзина пуста</div>
+<!-- Категория: Креатины -->
+<div id="creatines" class="tab-content">
+    <div class="product" data-name="Креатин Натуральный" data-price="1200">
+        <div class="product-img">CREATINE</div>
+        <div class="product-info">
+            <div class="product-title">Натуральный креатин</div>
+            <div class="product-desc">Чистый моногидрат без вкусовых добавок.</div>
+            <div class="product-price">1200 ₽</div>
+        </div>
+        <div class="controls">
+            <button class="btn-add" onclick="changeQty(this, 1)">+</button>
+            <div class="counter">
+                <button class="btn-count" onclick="changeQty(this, -1)">-</button>
+                <span class="qty">0</span>
+                <button class="btn-count" onclick="changeQty(this, 1)">+</button>
+            </div>
+        </div>
+    </div>
+    <div class="product" data-name="Креатин Яблоко" data-price="1300">
+        <div class="product-img">CREATINE</div>
+        <div class="product-info">
+            <div class="product-title">Креатин Яблоко</div>
+            <div class="product-desc">Освежающий вкус зеленого яблока с кислинкой.</div>
+            <div class="product-price">1300 ₽</div>
+        </div>
+        <div class="controls">
+            <button class="btn-add" onclick="changeQty(this, 1)">+</button>
+            <div class="counter">
+                <button class="btn-count" onclick="changeQty(this, -1)">-</button>
+                <span class="qty">0</span>
+                <button class="btn-count" onclick="changeQty(this, 1)">+</button>
+            </div>
+        </div>
+    </div>
+    <div class="product" data-name="Креатин Лимон Кола" data-price="1300">
+        <div class="product-img">CREATINE</div>
+        <div class="product-info">
+            <div class="product-title">Креатин Лимон-Кола</div>
+            <div class="product-desc">Необычное и бодрящее сочетание колы и лимона.</div>
+            <div class="product-price">1300 ₽</div>
+        </div>
+        <div class="controls">
+            <button class="btn-add" onclick="changeQty(this, 1)">+</button>
+            <div class="counter">
+                <button class="btn-count" onclick="changeQty(this, -1)">-</button>
+                <span class="qty">0</span>
+                <button class="btn-count" onclick="changeQty(this, 1)">+</button>
+            </div>
+        </div>
+    </div>
+    <div class="product" data-name="Креатин Тропический Микс" data-price="1300">
+        <div class="product-img">CREATINE</div>
+        <div class="product-info">
+            <div class="product-title">Креатин Тропический Микс</div>
+            <div class="product-desc">Сладкий микс из экзотических тропических фруктов.</div>
+            <div class="product-price">1300 ₽</div>
+        </div>
+        <div class="controls">
+            <button class="btn-add" onclick="changeQty(this, 1)">+</button>
+            <div class="counter">
+                <button class="btn-count" onclick="changeQty(this, -1)">-</button>
+                <span class="qty">0</span>
+                <button class="btn-count" onclick="changeQty(this, 1)">+</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<script>
-    let tg = window.Telegram.WebApp;
-    tg.expand(); // Расширяем на весь экран
+<!-- Категория: Выгодные наборы -->
+<div id="bundles" class="tab-content">
+    <div class="product" data-name="Набор: 2 протеина" data-price="4600">
+        <div class="product-img">НАБОР</div>
+        <div class="product-info">
+            <div class="product-title">Набор: 2 протеина</div>
+            <div class="product-desc">Две пачки любого вкуса со скидкой.</div>
+            <div class="product-price">4600 ₽</div>
+        </div>
+        <div class="controls">
+            <button class="btn-add" onclick="changeQty(this, 1)">+</button>
+            <div class="counter">
+                <button class="btn-count" onclick="changeQty(this, -1)">-</button>
+                <span class="qty">0</span>
+                <button class="btn-count" onclick="changeQty(this, 1)">+</button>
+            </div>
+        </div>
+    </div>
+    <div class="product" data-name="Набор: 3 протеина" data-price="6700">
+        <div class="product-img">НАБОР</div>
+        <div class="product-info">
+            <div class="product-title">Набор: 3 протеина</div>
+            <div class="product-desc">Запас белка надолго по самой выгодной цене.</div>
+            <div class="product-price">6700 ₽</div>
+        </div>
+        <div class="controls">
+            +
 
-    let cart = {};
+-
+0
++
 
-    function addToCart(name, price) {
-        if (!cart[name]) {
-            cart[name] = { count: 1, price: price };
-        } else {
-            cart[name].count++;
-        }
-        updateCart();
-    }
 
-    function updateCart() {
-        let total = 0;
-        let itemsText = [];
-        for (let name in cart) {
-            total += cart[name].count * cart[name].price;
-            itemsText.push(`${name} x${cart[name].count}`);
-        }
 
-        if (total > 0) {
-            document.getElementById('cartStatus').innerText = `В корзине товаров на сумму: ${total} руб.`;
-            tg.MainButton.text = `Отправить заказ оператору (${total} руб.)`;
-            tg.MainButton.show();
-        } else {
-            document.getElementById('cartStatus').innerText = "Корзина пуста";
-            tg.MainButton.hide();
-        }
-    }
 
-    // Главная кнопка Telegram Web App внизу экрана
-    tg.MainButton.onClick(function() {
-        let orderDetails = "Новый заказ:\n";
-        for (let name in cart) {
-            orderDetails += `- ${name} x${cart[name].count}\n`;
-        }
-        
-        // Отправляем данные обратно в бота
-        tg.sendData(orderDetails);
-        tg.close();
-    });
-</script>
-</body>
-</html>
+НАБОР
+
+Протеин + Креатин
+Идеальное комбо для старта набора массы.
+3500 ₽
+
+
++
+
+-
+0
++
+
+
+
+
+НАБОР
+
+3 креатина натуральных
+Оптовый комплект чистого моногидрата.
+3200 ₽
+
+
++
+
+-
+0
++
+
+
+
+
+НАБОР
+
+3 креатина вкусовых
+Три разных вкуса креатина в одном наборе.
+3500 ₽
+
+
++
+
+-
+0
++
+
+
+
+Корзина пуста
+let tg = window.Telegram.WebApp;
+tg.expand();
+let cart = {};
+function switchTab(event, tabId) {
+document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+document.querySelectorAll('.cat-btn').forEach(el => el.classList.remove('active'));
+document.getElementById(tabId).classList.add('active');
+event.currentTarget.classList.add('active');
+}
+function changeQty(btn, change) {
+let parent = btn.closest('.product');
+let name = parent.getAttribute('data-name');
+let price = parseInt(parent.getAttribute('data-price'));
+let controls = parent.querySelector('.controls');
+let btnAdd = controls.querySelector('.btn-add');
+let counter = controls.querySelector('.counter');
+let qtySpan = controls.querySelector('.qty');
+if (!cart[name]) cart[name] = { count: 0, price: price };
+cart[name].count += change;
+if (cart[name].count <= 0) {
+delete cart[name];
+qtySpan.innerText = 0;
+btnAdd.style.display = 'block';
+counter.style.display = 'none';
+} else {
+qtySpan.innerText = Math.max(0, cart[name].count);
+btnAdd.style.display = 'none';
+counter.style.display = 'flex';
+}
+updateCart();
+}
+function updateCart() {
+let total = 0;
+for (let name in cart) { total += cart[name].count * cart[name].price; }
+if (total > 0) {
+document.getElementById('cartStatus').innerText = Итого в корзине: ${total} ₽;
+tg.MainButton.text = Отправить заказ оператору (${total} ₽);
+tg.MainButton.show();
+} else {
+document.getElementById('cartStatus').innerText = "Корзина пуста";
+tg.MainButton.hide();
+}
+}
+tg.MainButton.onClick(function() {
+let user = tg.initDataUnsafe.user;
+let username = user && user.username ? @${user.username} : "Не указан (нет юзернейма)";
+let firstName = user && user.first_name ? user.first_name : "Клиент";
+let userId = user && user.id ? user.id : "Не определен";
+let text = 📦 НОВЫЙ ЗАКАЗ!\n\n;
+text += 👤 Клиент: ${firstName}\n;
+text += 🔗 Контакты: ${username}\n;
+text += 🆔 ID пользователя: ${userId}\n\n;
+text += 🛒 Товары:\n;
+let total = 0;
+for (let name in cart) {
+text += • ${name} — ${cart[name].count} шт. (${cart[name].count * cart[name].price} ₽)\n;
+total += cart[name].count * cart[name].price;
+}
+text += \n💰 Сумма заказа: ${total} ₽;
+tg.sendData(text);
+tg.close();
+});
