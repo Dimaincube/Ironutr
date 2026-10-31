@@ -98,19 +98,12 @@
 <div class="cart-status" id="cartStatus">Корзина пуста</div>
 
 <script>
-    // Принудительная инициализация WebApp
+    // ВСТАВЬТЕ СВОИ ДАННЫЕ СЮДА:
+    var botToken = "9275913693:AAHsjQAK1QjfWNpUvmN-bkw_K3Uqf6mYZFU"; 
+    var adminId = "@dimaknyazev247";
+
     var tg = window.Telegram ? window.Telegram.WebApp : null;
-    
-    if (tg) {
-        tg.ready();
-        tg.expand();
-        // Включаем поддержку встроенной кнопки Telegram на полную мощность
-        tg.MainButton.setParams({
-            text: "ОТПРАВИТЬ ЗАКАЗ ОПЕРАТОРУ",
-            color: "#007aff",
-            text_color: "#ffffff"
-        });
-    }
+    if (tg) { tg.ready(); tg.expand(); }
     
     var cart = {};
 
@@ -162,41 +155,59 @@
     function updateCart() {
         var total = 0;
         for (var name in cart) { total += cart[name].count * cart[name].price; }
+        
+        var statusDiv = document.getElementById('cartStatus');
         if (total > 0) {
-            document.getElementById('cartStatus').innerText = "Итого в корзине: " + total + " ₽";
-            if (tg) {
-                tg.MainButton.setText("Отправить заказ оператору (" + total + " ₽)");
-                tg.MainButton.show();
-            }
+            statusDiv.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px;">Итого в корзине: ${total} ₽</div>
+                <button onclick="sendOrder()" style="background: #34c759; color: white; border: none; padding: 14px 28px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer; box-shadow: 0 4px 10px rgba(52,199,89,0.3);">
+                    🚀 Оформить заказ (${total} ₽)
+                </button>
+            `;
         } else {
-            document.getElementById('cartStatus').innerText = "Корзина пуста";
-            if (tg) { tg.MainButton.hide(); }
+            statusDiv.innerHTML = "Корзина пуста";
         }
     }
 
-    if (tg) {
-        tg.MainButton.onClick(function() {
-            var user = tg.initDataUnsafe.user;
-            var username = user && user.username ? "@" + user.username : "Не указан";
-            var firstName = user && user.first_name ? user.first_name : "Клиент";
+    function sendOrder() {
+        var user = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+        var username = user && user.username ? "@" + user.username : "Не указан";
+        var firstName = user && user.first_name ? user.first_name : "Клиент";
 
-            var text = "📦 НОВЫЙ ЗАКАЗ!\n\n";
-            text += "👤 Клиент: " + firstName + "\n";
-            text += "🔗 Контакты: " + username + "\n\n";
-            text += "🛒 Товары:\n";
-            
-            var total = 0;
-            for (var name in cart) {
-                text += "• " + name + " — " + cart[name].count + " шт. (" + (cart[name].count * cart[name].price) + " ₽)\n";
-                total += cart[name].count * cart[name].price;
-            }
-            text += "\n💰 Сумма: " + total + " ₽";
+        var text = "📦 *НОВЫЙ ЗАКАЗ!*\n\n";
+        text += "👤 *Клиент:* " + firstName + "\n";
+        text += "🔗 *Контакты:* " + username + "\n\n";
+        text += "🛒 *Товары:*\n";
+        
+        var total = 0;
+        for (var name in cart) {
+            text += "• " + name + " — " + cart[name].count + " шт. (" + (cart[name].count * cart[name].price) + " ₽)\n";
+            total += cart[name].count * cart[name].price;
+        }
+        text += "\n💰 *Сумма:* " + total + " ₽";
 
-            tg.sendData(text);
-            tg.close();
+        // Отправка напрямую вам в личку через Telegram API
+        var url = "https://telegram.org" + botToken + "/sendMessage";
+        
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: adminId,
+                text: text,
+                parse_mode: "Markdown"
+            })
+        })
+        .then(function() {
+            alert("Заказ успешно отправлен оператору! Мы свяжемся с вами в чате.");
+            if (tg) tg.close();
+        })
+        .catch(function(err) {
+            alert("Ошибка отправки. Пожалуйста, напишите оператору напрямую.");
         });
     }
 </script>
+
 
 </body>
 </html>
