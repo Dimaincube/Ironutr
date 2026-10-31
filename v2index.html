@@ -97,6 +97,9 @@
 
 <div class="cart-status" id="cartStatus">Корзина пуста</div>
 <script>
+    // Вставьте ваш личный юзернейм без значка @
+    var myTelegramUsername = "dimaknyazev247"; 
+
     var tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { tg.ready(); tg.expand(); }
     
@@ -106,11 +109,9 @@
         document.getElementById('box-proteins').style.display = 'none';
         document.getElementById('box-creatines').style.display = 'none';
         document.getElementById('box-bundles').style.display = 'none';
-        
         document.getElementById('btn-proteins').classList.remove('active');
         document.getElementById('btn-creatines').classList.remove('active');
         document.getElementById('btn-bundles').classList.remove('active');
-
         document.getElementById('box-' + id).style.display = 'block';
         document.getElementById('btn-' + id).classList.add('active');
     }
@@ -119,10 +120,8 @@
         var parent = btn.closest('.product');
         var name = parent.getAttribute('data-name');
         var price = parseInt(parent.getAttribute('data-price'));
-        
         if (!cart[name]) cart[name] = { count: 0, price: price };
         cart[name].count += 1;
-
         parent.querySelector('.qty').innerText = cart[name].count;
         parent.querySelector('.btn-add').style.display = 'none';
         parent.querySelector('.counter').style.display = 'flex';
@@ -132,7 +131,6 @@
     function minus(btn) {
         var parent = btn.closest('.product');
         var name = parent.getAttribute('data-name');
-        
         if (cart[name]) {
             cart[name].count -= 1;
             if (cart[name].count <= 0) {
@@ -140,9 +138,7 @@
                 parent.querySelector('.qty').innerText = 0;
                 parent.querySelector('.btn-add').style.display = 'block';
                 parent.querySelector('.counter').style.display = 'none';
-            } else {
-                parent.querySelector('.qty').innerText = cart[name].count;
-            }
+            } else { parent.querySelector('.qty').innerText = cart[name].count; }
         }
         updateCart();
     }
@@ -150,45 +146,30 @@
     function updateCart() {
         var total = 0;
         for (var name in cart) { total += cart[name].count * cart[name].price; }
-        
         var statusDiv = document.getElementById('cartStatus');
         if (total > 0) {
             statusDiv.innerHTML = `
                 <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px;">Итого в корзине: ${total} ₽</div>
-                <button onclick="sendOrder()" style="background: #007aff; color: white; border: none; padding: 14px 28px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer; box-shadow: 0 4px 10px rgba(0,122,255,0.3);">
+                <button onclick="sendOrder()" style="background: #007aff; color: white; border: none; padding: 14px 28px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer;">
                     🚀 Отправить заказ оператору (${total} ₽)
                 </button>
             `;
-        } else {
-            statusDiv.innerHTML = "Корзина пуста";
-        }
+        } else { statusDiv.innerHTML = "Корзина пуста"; }
     }
 
     function sendOrder() {
-        if (!tg) {
-            alert("Ошибка: Откройте приложение внутри Telegram");
-            return;
-        }
-
-        var user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
-        var username = user && user.username ? "@" + user.username : "Не указан";
-        var firstName = user && user.first_name ? user.first_name : "Клиент";
-
-        var text = "📦 *НОВЫЙ ЗАКАЗ!*\n\n";
-        text += "👤 *Клиент:* " + firstName + "\n";
-        text += "🔗 *Контакты:* " + username + "\n\n";
-        text += "🛒 *Товары:*\n";
-        
+        var text = "📦 ЗДРАВСТВУЙТЕ! ХОЧУ СДЕЛАТЬ ЗАКАЗ:\n\n";
         var total = 0;
         for (var name in cart) {
             text += "• " + name + " — " + cart[name].count + " шт. (" + (cart[name].count * cart[name].price) + " ₽)\n";
             total += cart[name].count * cart[name].price;
         }
-        text += "\n💰 *Сумма:* " + total + " ₽";
+        text += "\n💰 Сумма заказа: " + total + " ₽";
 
-        // Официальный безопасный метод передачи данных боту
-        tg.sendData(text);
-        tg.close();
+        // Формируем прямую ссылку для отправки сообщения лично вам в ЛС
+        var tMeUrl = "https://t.me" + myTelegramUsername + "?text=" + encodeURIComponent(text);
+        
+        if (tg) { tg.openTelegramLink(tMeUrl); } else { window.open(tMeUrl, '_blank'); }
     }
 </script>
 </body>
