@@ -96,12 +96,7 @@
 
 
 <div class="cart-status" id="cartStatus">Корзина пуста</div>
-
 <script>
-    // ВСТАВЬТЕ СВОИ ДАННЫЕ СЮДА:
-    var botToken = "9275913693:AAHsjQAK1QjfWNpUvmN-bkw_K3Uqf6mYZFU"; 
-    var adminId = "5153463877";
-
     var tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) { tg.ready(); tg.expand(); }
     
@@ -160,8 +155,8 @@
         if (total > 0) {
             statusDiv.innerHTML = `
                 <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px;">Итого в корзине: ${total} ₽</div>
-                <button onclick="sendOrder()" style="background: #34c759; color: white; border: none; padding: 14px 28px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer; box-shadow: 0 4px 10px rgba(52,199,89,0.3);">
-                    🚀 Оформить заказ (${total} ₽)
+                <button onclick="sendOrder()" style="background: #007aff; color: white; border: none; padding: 14px 28px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer; box-shadow: 0 4px 10px rgba(0,122,255,0.3);">
+                    🚀 Отправить заказ оператору (${total} ₽)
                 </button>
             `;
         } else {
@@ -170,7 +165,12 @@
     }
 
     function sendOrder() {
-        var user = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+        if (!tg) {
+            alert("Ошибка: Откройте приложение внутри Telegram");
+            return;
+        }
+
+        var user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
         var username = user && user.username ? "@" + user.username : "Не указан";
         var firstName = user && user.first_name ? user.first_name : "Клиент";
 
@@ -186,28 +186,10 @@
         }
         text += "\n💰 *Сумма:* " + total + " ₽";
 
-        // Отправка напрямую вам в личку через Telegram API
-        var url = "https://telegram.org" + botToken + "/sendMessage";
-        
-        fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                chat_id: adminId,
-                text: text,
-                parse_mode: "Markdown"
-            })
-        })
-        .then(function() {
-            alert("Заказ успешно отправлен оператору! Мы свяжемся с вами в чате.");
-            if (tg) tg.close();
-        })
-        .catch(function(err) {
-            alert("Ошибка отправки. Пожалуйста, напишите оператору напрямую.");
-        });
+        // Официальный безопасный метод передачи данных боту
+        tg.sendData(text);
+        tg.close();
     }
 </script>
-
-
 </body>
 </html>
