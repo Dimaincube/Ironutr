@@ -167,7 +167,7 @@
         text += "\n💰 Сумма заказа: " + total + " ₽";
 
         // Формируем прямую ссылку для отправки сообщения лично вам в ЛС
-        var tMeUrl = "https://t.me" + myTelegramUsername + "?text=" + encodeURIComponent(text);
+               var tMeUrl = "https://t.me/" + myTelegramUsername + "?text=" + encodeURIComponent(text);
         
         if (tg) { tg.openTelegramLink(tMeUrl); } else { window.open(tMeUrl, '_blank'); }
     }
