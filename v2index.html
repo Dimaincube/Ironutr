@@ -16,6 +16,7 @@
         .product-img { width: 100%; height: 100%; object-fit: cover; }
         .product-info { flex-grow: 1; }
         .product-title { font-weight: 600; font-size: 15px; }
+        .product-desc { color: #71717a; font-size: 12px; margin-top: 3px; line-height: 1.2; }
         .product-price { color: #007aff; font-weight: bold; font-size: 15px; margin-top: 5px; }
         .controls { display: flex; align-items: center; min-width: 90px; justify-content: flex-end; }
         .btn-add { background: #007aff; color: white; border: none; padding: 8px 16px; border-radius: 15px; font-weight: bold; cursor: pointer; }
@@ -31,43 +32,47 @@
 <div class="categories">
     <button class="cat-btn active" id="btn-proteins" onclick="tab('proteins')">Протеины</button>
     <button class="cat-btn" id="btn-creatines" onclick="tab('creatines')">Креатины</button>
-    <button class="cat-btn" id="btn-bundles" onclick="tab('bundles')">Наборы</button>
+    <button class="cat-btn" id="btn-bundles" onclick="tab('bundles')">💰Выгодные Наборы</button>
 </div>
 
 <!-- ПРОТЕИНЫ -->
 <!-- ПРОТЕИНЫ -->
 <div id="box-proteins">
-    <div class="product" data-name=" Протеин 1WIN Whey Protein Французская ваниль (900 г / 30 порций)" data-price="2750">
+    <div class="product" data-name="Протеин 1WIN Whey Protein Французская ваниль (900 г / 30 порций)" data-price="2750">
         <div class="product-img-box">
             <img class="product-img" src="https://placehold.co" alt="Протеин">
         </div>
         <div class="product-info">
             <div class="product-title"> Протеин 1WIN Французская ваниль (900 г)</div>
+            <div class="product-desc">Сывороточный (Whey) • 30 порций<br>🥛 Белок: 22г | BCAA: 5г | Без сахара • СГР</div>
             <div class="product-price">2750 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
     </div>
-    <div class="product" data-name=" Протеин 1WIN Whey Protein Шоколадный пирог (900 г / 30 порций)" data-price="2750">
+    <div class="product" data-name="Протеин 1WIN Whey Protein Шоколадный пирог (900 г / 30 порций)" data-price="2750">
         <div class="product-img-box">
             <img class="product-img" src="https://placehold.co" alt="Протеин">
         </div>
         <div class="product-info">
             <div class="product-title"> Протеин 1WIN Шоколадный пирог (900 г)</div>
+            <div class="product-desc">Сывороточный (Whey) • 30 порций<br>🥛 Белок: 22г | BCAA: 5г | Без сахара • СГР</div>
             <div class="product-price">2750 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
     </div>
-    <div class="product" data-name=" Протеин 1WIN Whey Protein Клубника (900 г / 30 порций)" data-price="2750">
+    <div class="product" data-name="Протеин 1WIN Whey Protein Клубника (900 г / 30 порций)" data-price="2750">
         <div class="product-img-box">
             <img class="product-img" src="https://placehold.co" alt="Протеин">
         </div>
         <div class="product-info">
             <div class="product-title"> Протеин 1WIN Клубника (900 г)</div>
+            <div class="product-desc">Сывороточный (Whey) • 30 порций<br>🥛 Белок: 22г | BCAA: 5г | Без сахара • СГР</div>
             <div class="product-price">2750 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
     </div>
 </div>
+
 
 <!-- КРЕАТИНЫ -->
 <!-- КРЕАТИНЫ -->
@@ -78,6 +83,7 @@
         </div>
         <div class="product-info">
             <div class="product-title">🔋 Креатин 1WIN Натуральный (200 г)</div>
+            <div class="product-desc">40 порций • Чистый состав без сахара<br>⚡ Порция 5г: Креатин моногидрат 5г • СГР</div>
             <div class="product-price">600 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
@@ -88,6 +94,7 @@
         </div>
         <div class="product-info">
             <div class="product-title">🍏 Креатин 1WIN Яблоко (200 г)</div>
+            <div class="product-desc">30 порций • Без сахара • СГР<br>🧪 Порция 6.6г: Креатин 5.5г + Витамин C 200мг</div>
             <div class="product-price">650 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
@@ -98,6 +105,7 @@
         </div>
         <div class="product-info">
             <div class="product-title">🍋 Креатин 1WIN Лимон-Кола (200 г)</div>
+            <div class="product-desc">30 порций • Без сахара • СГР<br>🧪 Порция 6.6г: Креатин 5.5г + Витамин C 200мг</div>
             <div class="product-price">650 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
@@ -108,6 +116,7 @@
         </div>
         <div class="product-info">
             <div class="product-title">🍹 Креатин 1WIN Тропический Микс (200 г)</div>
+            <div class="product-desc">30 порций • Без сахара • СГР<br>🧪 Порция 6.6г: Креатин 5.5г + Витамин C 200мг</div>
             <div class="product-price">650 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
@@ -116,7 +125,6 @@
 
 
 <!-- НАБОРЫ -->
-<!-- НАБОРЫ -->
 <div id="box-bundles" style="display: none;">
     <div class="product" data-name="Дуэт «2 Протеина»" data-price="5350">
         <div class="product-img-box">
@@ -124,6 +132,7 @@
         </div>
         <div class="product-info">
             <div class="product-title">📦 Дуэт «2 Протеина»</div>
+            <div class="product-desc">Выгода! 2 упаковки протеина 1WIN по 900 г<br>🔥 Вкусы любые на ваш выбор!</div>
             <div class="product-price">5350 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
@@ -134,6 +143,7 @@
         </div>
         <div class="product-info">
             <div class="product-title">📦 Тяжелый сет «3 Протеина»</div>
+            <div class="product-desc">Максимальный запас! 3 упаковки протеина по 900 г<br>🔥 Вкусы любые на ваш выбор!</div>
             <div class="product-price">7790 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
@@ -144,6 +154,7 @@
         </div>
         <div class="product-info">
             <div class="product-title">💥 КОМБО: Протеин (900г) + Креатин (200г)</div>
+            <div class="product-desc">Любой вкус протеина 1WIN (900г) на выбор<br>➕ Креатин 1WIN Натуральный (200г / 40 порций)</div>
             <div class="product-price">3250 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
@@ -154,6 +165,7 @@
         </div>
         <div class="product-info">
             <div class="product-title">📦 Сет «3 натуральных Креатина»</div>
+            <div class="product-desc">Крепкий курс! 3 банки натурального креатина 1WIN<br>🔋 Всего 120 порций (каждая банка по 200г / 40 порц)</div>
             <div class="product-price">1750 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
@@ -164,12 +176,12 @@
         </div>
         <div class="product-info">
             <div class="product-title">📦 Сет «3 вкусовых Креатина»</div>
+            <div class="product-desc">3 банки сочных вкусовых креатинов 1WIN по 200г<br>🧪 Вкусы на ваш выбор! (3 банки по 30 порций)</div>
             <div class="product-price">1800 ₽</div>
         </div>
         <div class="controls"><button class="btn-add" onclick="plus(this)">+</button><div class="counter"><button class="btn-count" onclick="minus(this)">-</button><span class="qty">0</span><button class="btn-count" onclick="plus(this)">+</button></div></div>
     </div>
 </div>
-
 
 
 <div class="cart-status" id="cartStatus">Корзина пуста</div>
