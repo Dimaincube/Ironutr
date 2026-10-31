@@ -236,7 +236,7 @@
         updateCart();
     }
 
-        function updateCart() {
+    function updateCart() {
         var total = 0;
         for (var name in cart) { total += cart[name].count * cart[name].price; }
         var statusDiv = document.getElementById('cartStatus');
@@ -250,16 +250,16 @@
                 <div class="delivery-box">
                     <div class="delivery-title">📍 Способ получения и чек</div>
                     
-                    <label class="delivery-option" onclick="toggleDeliveryFields('courier')">
-                        <input type="radio" name="delivery_type" id="del-courier" value="Доставка курьером" checked>
+                    <label class="delivery-option" onclick="toggleDeliveryFields('calc')">
+                        <input type="radio" name="delivery_type" id="del-calc" value="Нужен расчет самой выгодной доставки" checked>
                         <div>
-                            <strong>Доставка</strong>
-                            <div style="color: #71717a; font-size: 12px; margin-top: 2px;">Потребуется адрес и телефон для чека</div>
+                            <strong>Нужен расчет самой выгодной доставки</strong>
+                            <div style="color: #71717a; font-size: 12px; margin-top: 2px;">Рассчитаем через СДЭК, 5Post, Ozon</div>
                         </div>
                     </label>
                     
-                    <div id="fields-courier" class="delivery-fields" style="display: block;">
-                        <input type="text" id="input-address" class="delivery-input" placeholder="Введите ваш адрес доставки">
+                    <div id="fields-calc" class="delivery-fields" style="display: block;">
+                        <input type="text" id="input-address" class="delivery-input" placeholder="Адрес дома / ПВЗ и желаемая компания">
                     </div>
 
                     <label class="delivery-option" onclick="toggleDeliveryFields('pickup')">
@@ -270,15 +270,7 @@
                         </div>
                     </label>
 
-                    <label class="delivery-option" onclick="toggleDeliveryFields('calc')">
-                        <input type="radio" name="delivery_type" id="del-calc" value="Нужен расчет самой выгодной доставки">
-                        <div>
-                            <strong>Нужен расчет самой выгодной доставки</strong>
-                            <div style="color: #71717a; font-size: 12px; margin-top: 2px;">Расчитаем через OZON, 5Post, CDEK</div>
-                        </div>
-                    </label>
-
-                    <input type="tel" id="input-phone" class="delivery-input" placeholder="Ваш телефон для формирования чека">
+                    <input type="tel" id="input-phone" class="delivery-input" placeholder="Ваш telephone для формирования чека">
                 </div>
 
                 <button onclick="sendOrder()" style="background: #007aff; color: white; border: none; padding: 14px 28px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer; margin-top: 15px;">
@@ -289,9 +281,9 @@
     }
 
     function toggleDeliveryFields(type) {
-        var addressField = document.getElementById('fields-courier');
-        if (addressField) {
-            addressField.style.display = (type === 'courier') ? 'block' : 'none';
+        var calcField = document.getElementById('fields-calc');
+        if (calcField) {
+            calcField.style.display = (type === 'calc') ? 'block' : 'none';
         }
     }
 
@@ -314,8 +306,8 @@
             alert('Пожалуйста, введите номер телефона для формирования чека!');
             return;
         }
-        if (document.getElementById('del-courier').checked && !address) {
-            alert('Пожалуйста, введите адрес доставки!');
+        if (document.getElementById('del-calc').checked && !address) {
+            alert('Пожалуйста, укажите адрес/ПВЗ и желаемую компанию доставки!');
             return;
         }
 
@@ -328,17 +320,17 @@
         text += "\n💰 Сумма заказа: " + total + " ₽\n";
         text += "\n📍 СПОСОБ ПОЛУЧЕНИЯ:\n" + deliveryType;
         
-        if (document.getElementById('del-courier').checked) {
-            text += "\n🏠 Адрес доставки: " + address;
+        if (document.getElementById('del-calc').checked) {
+            text += "\n🏠 Данные доставки: " + address;
         } else if (document.getElementById('del-pickup').checked) {
             text += "\n🏬 Точка: м. Некрасовка, ул. Вертолетчиков 21к5";
         }
-
         text += "\n📱 Телефон для чека: " + phone;
 
         var tMeUrl = "https://t.me/" + myTelegramUsername + "?text=" + encodeURIComponent(text);
         if (tg) { tg.openTelegramLink(tMeUrl); } else { window.open(tMeUrl, '_blank'); }
     }
+
 </script>
 </body>
 </html>
