@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=device-width, initial-scale=1.0">
+    <title>Магазин Спортивного Питания</title>
+    <script src="https://telegram.org"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f9; color: #333; margin: 0; padding: 15px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .product { background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; }
+        .product img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-right: 15px; }
+        .product-info { flex-grow: 1; }
+        .product-title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .product-price { color: #007bff; font-weight: bold; }
+        .btn { background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+        .btn-remove { background: #dc3545; margin-left: 5px; }
+        .cart-status { text-align: center; margin-top: 20px; font-weight: bold; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>Наш Магазин Спортпита</h2>
+    <p>Добавляйте товары и отправляйте заказ оператору</p>
+</div>
+
+<!-- Товар 1 -->
+<div class="product">
+    <img src="https://placehold.co" alt="Протеин">
+    <div class="product-info">
+        <div class="product-title">Сывороточный протеин (1 кг)</div>
+        <div class="product-price">2500 руб.</div>
+    </div>
+    <button class="btn" onclick="addToCart('Протеин 1кг', 2500)">+</button>
+</div>
+
+<!-- Товар 2 -->
+<div class="product">
+    <img src="https://placehold.co" alt="Креатин">
+    <div class="product-info">
+        <div class="product-title">Креатин моногидрат (300 г)</div>
+        <div class="product-price">1200 руб.</div>
+    </div>
+    <button class="btn" onclick="addToCart('Креатин 300г', 1200)">+</button>
+</div>
+
+<div class="cart-status" id="cartStatus">Корзина пуста</div>
+
+<script>
+    let tg = window.Telegram.WebApp;
+    tg.expand(); // Расширяем на весь экран
+
+    let cart = {};
+
+    function addToCart(name, price) {
+        if (!cart[name]) {
+            cart[name] = { count: 1, price: price };
+        } else {
+            cart[name].count++;
+        }
+        updateCart();
+    }
+
+    function updateCart() {
+        let total = 0;
+        let itemsText = [];
+        for (let name in cart) {
+            total += cart[name].count * cart[name].price;
+            itemsText.push(`${name} x${cart[name].count}`);
+        }
+
+        if (total > 0) {
+            document.getElementById('cartStatus').innerText = `В корзине товаров на сумму: ${total} руб.`;
+            tg.MainButton.text = `Отправить заказ оператору (${total} руб.)`;
+            tg.MainButton.show();
+        } else {
+            document.getElementById('cartStatus').innerText = "Корзина пуста";
+            tg.MainButton.hide();
+        }
+    }
+
+    // Главная кнопка Telegram Web App внизу экрана
+    tg.MainButton.onClick(function() {
+        let orderDetails = "Новый заказ:\n";
+        for (let name in cart) {
+            orderDetails += `- ${name} x${cart[name].count}\n`;
+        }
+        
+        // Отправляем данные обратно в бота
+        tg.sendData(orderDetails);
+        tg.close();
+    });
+</script>
+</body>
+</html>
