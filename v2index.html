@@ -98,27 +98,43 @@
 <div class="cart-status" id="cartStatus">Корзина пуста</div>
 
 <script>
-    let tg = window.Telegram ? window.Telegram.WebApp : null;
-    if (tg) { tg.ready(); tg.expand(); }
-    let cart = {};
+    // Принудительная инициализация WebApp
+    var tg = window.Telegram ? window.Telegram.WebApp : null;
+    
+    if (tg) {
+        tg.ready();
+        tg.expand();
+        // Включаем поддержку встроенной кнопки Telegram на полную мощность
+        tg.MainButton.setParams({
+            text: "ОТПРАВИТЬ ЗАКАЗ ОПЕРАТОРУ",
+            color: "#007aff",
+            text_color: "#ffffff"
+        });
+    }
+    
+    var cart = {};
 
     function tab(id) {
         document.getElementById('box-proteins').style.display = 'none';
         document.getElementById('box-creatines').style.display = 'none';
         document.getElementById('box-bundles').style.display = 'none';
+        
         document.getElementById('btn-proteins').classList.remove('active');
         document.getElementById('btn-creatines').classList.remove('active');
         document.getElementById('btn-bundles').classList.remove('active');
+
         document.getElementById('box-' + id).style.display = 'block';
         document.getElementById('btn-' + id).classList.add('active');
     }
 
     function plus(btn) {
-        let parent = btn.closest('.product');
-        let name = parent.getAttribute('data-name');
-        let price = parseInt(parent.getAttribute('data-price'));
+        var parent = btn.closest('.product');
+        var name = parent.getAttribute('data-name');
+        var price = parseInt(parent.getAttribute('data-price'));
+        
         if (!cart[name]) cart[name] = { count: 0, price: price };
         cart[name].count += 1;
+
         parent.querySelector('.qty').innerText = cart[name].count;
         parent.querySelector('.btn-add').style.display = 'none';
         parent.querySelector('.counter').style.display = 'flex';
@@ -126,8 +142,9 @@
     }
 
     function minus(btn) {
-        let parent = btn.closest('.product');
-        let name = parent.getAttribute('data-name');
+        var parent = btn.closest('.product');
+        var name = parent.getAttribute('data-name');
+        
         if (cart[name]) {
             cart[name].count -= 1;
             if (cart[name].count <= 0) {
@@ -135,43 +152,51 @@
                 parent.querySelector('.qty').innerText = 0;
                 parent.querySelector('.btn-add').style.display = 'block';
                 parent.querySelector('.counter').style.display = 'none';
-            } else { parent.querySelector('.qty').innerText = Math.max(0, cart[name].count); }
+            } else {
+                parent.querySelector('.qty').innerText = cart[name].count;
+            }
         }
         updateCart();
     }
 
     function updateCart() {
-        let total = 0;
-        for (let name in cart) { total += cart[name].count * cart[name].price; }
+        var total = 0;
+        for (var name in cart) { total += cart[name].count * cart[name].price; }
         if (total > 0) {
             document.getElementById('cartStatus').innerText = "Итого в корзине: " + total + " ₽";
-            if (tg) { tg.MainButton.text = "Отправить заказ оператору (" + total + " ₽)"; tg.MainButton.show(); }
+            if (tg) {
+                tg.MainButton.setText("Отправить заказ оператору (" + total + " ₽)");
+                tg.MainButton.show();
+            }
         } else {
             document.getElementById('cartStatus').innerText = "Корзина пуста";
-            if (tg) tg.MainButton.hide();
+            if (tg) { tg.MainButton.hide(); }
         }
     }
 
     if (tg) {
         tg.MainButton.onClick(function() {
-            let user = tg.initDataUnsafe.user;
-            let username = user && user.username ? "@" + user.username : "Не указан";
-            let firstName = user && user.first_name ? user.first_name : "Клиент";
-            let text = "📦 НОВЫЙ ЗАКАЗ!\n\n👤 Клиент: " + firstName + "\n🔗 Контакты: " + username + "\n🛒 Товары:\n";
-            let total = 0;
-            for (let name in cart) {
+            var user = tg.initDataUnsafe.user;
+            var username = user && user.username ? "@" + user.username : "Не указан";
+            var firstName = user && user.first_name ? user.first_name : "Клиент";
+
+            var text = "📦 НОВЫЙ ЗАКАЗ!\n\n";
+            text += "👤 Клиент: " + firstName + "\n";
+            text += "🔗 Контакты: " + username + "\n\n";
+            text += "🛒 Товары:\n";
+            
+            var total = 0;
+            for (var name in cart) {
                 text += "• " + name + " — " + cart[name].count + " шт. (" + (cart[name].count * cart[name].price) + " ₽)\n";
                 total += cart[name].count * cart[name].price;
             }
             text += "\n💰 Сумма: " + total + " ₽";
-            
-            // ВСТАВЬТЕ ВАШ ID ВМЕСТО 123456789
-            let adminId = "@dimaknyazev247";
 
             tg.sendData(text);
             tg.close();
         });
     }
 </script>
+
 </body>
 </html>
