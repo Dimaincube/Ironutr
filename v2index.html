@@ -125,7 +125,7 @@
 <div id="box-bundles" style="display: none;">
     <div class="product" data-name="Дуэт «2 Протеина»" data-price="5350">
         <div class="product-img-box">
-            <img class="product-img" src="nab_creo_natur.png" alt="Набор">
+            <img class="product-img" src="nab_2prot.png" alt="Набор">
         </div>
         <div class="product-info">
             <div class="product-title">📦 Дуэт «2 Протеина»</div>
@@ -136,7 +136,7 @@
     </div>
     <div class="product" data-name="Тяжелый сет «3 Протеина» " data-price="7790">
         <div class="product-img-box">
-            <img class="product-img" src="nab_creo_natur.png" alt="Набор">
+            <img class="product-img" src="nab_3prot.png" alt="Набор">
         </div>
         <div class="product-info">
             <div class="product-title">📦 Тяжелый сет «3 Протеина»</div>
@@ -147,7 +147,7 @@
     </div>
     <div class="product" data-name="📦 КОМБО-набор: Протеин (900г) + Креатин (200г)" data-price="3250">
         <div class="product-img-box">
-            <img class="product-img" src="nab_creo_natur.png" alt="Набор">
+            <img class="product-img" src="nab_prot_cre.png" alt="Набор">
         </div>
         <div class="product-info">
             <div class="product-title">💥 КОМБО: Протеин (900г) + Креатин (200г)</div>
@@ -235,13 +235,27 @@
         var statusDiv = document.getElementById('cartStatus');
         if (total > 0) {
             statusDiv.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px;">Итого в корзине: ${total} ₽</div>
+                <div style="font-weight: bold; margin-bottom: 12px; font-size: 16px;">Итого в корзине: ${total} ₽</div>
+                <button onclick="clearCart()" style="background: #e4e4e7; color: #ef4444; border: none; padding: 8px 16px; border-radius: 12px; font-weight: bold; font-size: 13px; margin-bottom: 15px; cursor: pointer; width: 100%;">
+                    🗑️ Очистить корзину
+                </button>
                 <button onclick="sendOrder()" style="background: #007aff; color: white; border: none; padding: 14px 28px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer;">
                     🚀 Отправить заказ оператору (${total} ₽)
                 </button>
             `;
         } else { statusDiv.innerHTML = "Корзина пуста"; }
     }
+
+    function clearCart() {
+        cart = {};
+        document.querySelectorAll('.product').forEach(function(parent) {
+            parent.querySelector('.qty').innerText = 0;
+            parent.querySelector('.btn-add').style.display = 'block';
+            parent.querySelector('.counter').style.display = 'none';
+        });
+        updateCart();
+    }
+
 
     function sendOrder() {
         var text = "📦 ЗДРАВСТВУЙТЕ! ХОЧУ СДЕЛАТЬ ЗАКАЗ:\n\n";
